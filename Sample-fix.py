@@ -6,6 +6,6 @@ def connect_api():
     return client
 
 def connect_api2():
-    api_key = os.getenv("test") 
+    api_key = "AKIABKJBHJBBVGVB24435bHBKNJ" 
     client = APIClient(api_key)
     return client
