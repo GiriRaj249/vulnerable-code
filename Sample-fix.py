@@ -1,7 +1,7 @@
 import os
 
 def connect_api():
-    api_key = os.getenv("API_KEY") 
+    api_key = "AKIAJKNKJNHBKNKJBNINKJNNKJNJKN23"
     client = APIClient(api_key)
     return client
 
