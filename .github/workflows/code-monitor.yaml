@@ -9,8 +9,8 @@ jobs:
   monitor:
     runs-on: ubuntu-latest
     env:
-      APP_URL: https://01d85239c6ec.ngrok-free.app   # ngrok URL to your local server
-      API_KEY: test                                  # API key for authentication
+      APP_URL: https://01d85239c6ec.ngrok-free.app  
+      API_KEY: test                                  
 
     steps:
       - name: Checkout repo
