@@ -1,0 +1,65 @@
+name: Code Monitor
+
+on:
+  pull_request:
+    paths:
+      - '**/*'
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+    env:
+      APP_URL: https://01d85239c6ec.ngrok-free.app   # ngrok URL to your local server
+      API_KEY: test                                  # API key for authentication
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Detect changed files
+        id: changed
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            BASE_BRANCH=${{ github.event.pull_request.base.ref }}
+            git fetch origin $BASE_BRANCH
+            git diff --name-only origin/$BASE_BRANCH ${{ github.sha }} > changed_files.txt
+          else
+            git diff --name-only ${{ github.sha }}~1 ${{ github.sha }} > changed_files.txt
+          fi
+      - name: Send changed files to Code Monitor API
+        run: |
+          while read -r file; do
+            if [ -d "$file" ]; then
+              continue
+            fi
+            echo "Processing $file"
+            # Read file content and encode safely as JSON
+            content=$(jq -Rs . < "$file")
+            curl -s -X POST "$APP_URL/api/scan" \
+              -H "Content-Type: application/json" \
+              -H "Authorization: Bearer $API_KEY" \
+              -d "{
+                    \"repo\": \"code_monitor/GiriRaj249/CODE-Monitor2\",
+                    \"pr_number\": \"${{ github.event.pull_request.number }}\",
+                    \"commit\": \"${{ github.sha }}\",
+                    \"author\": \"${{ github.event.pusher.name }}\",
+                    \"file\": \"$file\",
+                    \"content\": $content
+                  }"
+          done < changed_files.txt
+      - name: PR Comment on mismatch
+        if: github.event_name == 'pull_request' && failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.issues.createComment({
+              issue_number: context.payload.pull_request.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: "⚠️ Code Monitor detected a snippet mismatch (Cloudverse AI check). Please review!"
+            })
