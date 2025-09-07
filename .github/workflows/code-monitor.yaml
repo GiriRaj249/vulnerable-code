@@ -49,7 +49,7 @@ jobs:
                     \"author\": \"${{ github.event.pusher.name }}\",
                     \"file\": \"$file\",
                     \"content\": $content
-                  }"
+                  }" | tee result.json
           done < changed_files.txt
           
       - name: PR Comment on mismatch
