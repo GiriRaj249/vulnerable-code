@@ -38,13 +38,12 @@ jobs:
               continue
             fi
             echo "Processing $file"
-            # Read file content and encode safely as JSON
             content=$(jq -Rs . < "$file")
             curl -s -X POST "$APP_URL/api/scan" \
               -H "Content-Type: application/json" \
               -H "Authorization: Bearer $API_KEY" \
               -d "{
-                    \"repo\": \"code_monitor/GiriRaj249/CODE-Monitor2\",
+                    \"repo\": \"${{ github.repository }}\",
                     \"pr_number\": \"${{ github.event.pull_request.number }}\",
                     \"commit\": \"${{ github.sha }}\",
                     \"author\": \"${{ github.event.pusher.name }}\",
@@ -52,6 +51,7 @@ jobs:
                     \"content\": $content
                   }"
           done < changed_files.txt
+          
       - name: PR Comment on mismatch
         if: github.event_name == 'pull_request' && failure()
         uses: actions/github-script@v7
