@@ -4,6 +4,9 @@ def connect_api():
     api_key = os.getenv("API_KEY") 
     client = APIClient(api_key)
     return client
+
+def nothing():
+    print("no changes in monitored code")
     
 def name():
     user_id = 42
