@@ -1,8 +1,9 @@
 import os
 
-def connect_api():
+def connect_api2():
     api_key = os.getenv("API_KEY") 
     client = APIClient(api_key)
+    test
     return client
     
 def name():
