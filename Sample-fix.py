@@ -6,8 +6,9 @@ def connect_api():
     return client
     
 def name():
-    user_id = 42
-    id = cursor.execute("SELECT * FROM users WHERE id = %s", (user_id,))
+    user_id = input("Enter url: ")
+    id = cursor.execute(f"SELECT * FROM users WHERE id = {user_id}")
+    #this change will result in SQLi since it pass user input in query directly
     return id
     
 def connect_api2():
