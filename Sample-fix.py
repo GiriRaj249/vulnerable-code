@@ -8,6 +8,8 @@ def connect_api():
 def name():
     user_id = 42
     id = cursor.execute("SELECT * FROM users WHERE id = %s", (user_id,))
+
+    test no change
     return id
     
 def connect_api2():
