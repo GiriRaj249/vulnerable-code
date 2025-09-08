@@ -6,8 +6,8 @@ def connect_api():
     return client
     
 def name():
-    user_id = 42
-    id = cursor.execute("SELECT * FROM users WHERE id = %s", (user_id,))
+    user_id = input("Enter: ")
+    id = cursor.execute(f"SELECT * FROM users WHERE id = {user_id}")
     return id
     
 def connect_api2():
